@@ -1,0 +1,72 @@
+# Autonomous Payment Orchestration System (APOS) Configuration
+# This file configures the autonomous system that provides ML-powered decision making,
+# anomaly detection, self-healing, and auto-scaling for Hyperswitch.
+
+[server]
+host = "127.0.0.1"
+port = 8090
+workers = 4
+request_timeout = 30
+enable_tls = false
+
+[database]
+url = "postgresql://db_user:db_pass@localhost:5432/hyperswitch_db"
+pool_size = 10
+connection_timeout = 30
+log_queries = false
+
+[redis]
+url = "redis://localhost:6379"
+pool_size = 20
+default_ttl = 3600
+event_stream = "apos:events"
+consumer_group = "apos_consumers"
+
+[event_monitor]
+enabled = true
+poll_interval_ms = 100
+batch_size = 50
+retention_days = 30
+enable_alerts = true
+
+[decision_engine]
+enable_ml_routing = true
+model_update_interval_hours = 24
+min_training_samples = 1000
+confidence_threshold = 0.75
+enable_ab_testing = true
+
+[anomaly_detection]
+enabled = true
+sensitivity = 0.85
+window_size_minutes = 60
+alert_threshold = 5
+enable_fraud_detection = true
+
+[self_healing]
+enabled = true
+max_retry_attempts = 3
+initial_retry_delay_seconds = 2
+retry_backoff_multiplier = 2.0
+auto_switch_connectors = true
+failure_threshold = 5
+
+[analytics]
+enabled = true
+aggregation_interval_minutes = 15
+retention_days = 90
+enable_predictions = true
+forecast_horizon_days = 7
+
+[resource_manager]
+enable_auto_scaling = true
+cpu_scale_up_threshold = 75.0
+cpu_scale_down_threshold = 30.0
+memory_scale_up_threshold = 80.0
+memory_scale_down_threshold = 40.0
+min_instances = 1
+max_instances = 10
+scale_cooldown_seconds = 300
+
+# Production-ready configuration template
+# Copy this to production.toml and adjust values for your environment

@@ -1,0 +1,48 @@
+# Prometheus configuration for Autonomous Orchestrator
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'hyperswitch'
+    service: 'autonomous_orchestrator'
+
+# Alerting configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+          # - 'alertmanager:9093'
+
+# Load rules once and periodically evaluate them
+rule_files:
+  - 'alerts/apos_alerts.yml'
+
+# Scrape configurations
+scrape_configs:
+  # Autonomous Orchestrator metrics
+  - job_name: 'autonomous_orchestrator'
+    static_configs:
+      - targets: ['autonomous_orchestrator:8090']
+        labels:
+          service: 'apos'
+          environment: 'production'
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # PostgreSQL exporter
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres_exporter:9187']
+
+  # Redis exporter
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis_exporter:9121']
+
+  # Node exporter for system metrics
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node_exporter:9100']
+
+# Recording rules for frequently used queries

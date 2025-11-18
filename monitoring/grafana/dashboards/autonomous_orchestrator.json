@@ -1,0 +1,207 @@
+{
+  "dashboard": {
+    "title": "Autonomous Payment Orchestration System (APOS)",
+    "tags": ["autonomous", "ml", "orchestration", "hyperswitch"],
+    "timezone": "utc",
+    "editable": true,
+    "graphTooltip": 1,
+    "panels": [
+      {
+        "id": 1,
+        "title": "System Health Score",
+        "type": "gauge",
+        "gridPos": { "h": 8, "w": 6, "x": 0, "y": 0 },
+        "targets": [
+          {
+            "expr": "apos_health_score",
+            "legendFormat": "Health Score"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "value": 0, "color": "red" },
+                { "value": 50, "color": "yellow" },
+                { "value": 70, "color": "orange" },
+                { "value": 90, "color": "green" }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "Decision Engine - Routing Accuracy",
+        "type": "stat",
+        "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+        "targets": [
+          {
+            "expr": "rate(apos_routing_decisions_correct_total[5m]) / rate(apos_routing_decisions_total[5m]) * 100",
+            "legendFormat": "Accuracy %"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Anomalies Detected",
+        "type": "stat",
+        "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+        "targets": [
+          {
+            "expr": "apos_anomalies_detected_total",
+            "legendFormat": "Total Anomalies"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "steps": [
+                { "value": 0, "color": "green" },
+                { "value": 10, "color": "yellow" },
+                { "value": 50, "color": "red" }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Self-Healing Success Rate",
+        "type": "stat",
+        "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
+        "targets": [
+          {
+            "expr": "rate(apos_healing_actions_success_total[5m]) / rate(apos_healing_actions_total[5m]) * 100",
+            "legendFormat": "Success Rate %"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Event Processing Rate",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+        "targets": [
+          {
+            "expr": "rate(apos_events_processed_total[1m])",
+            "legendFormat": "Events/sec"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Decision Engine Latency",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(apos_decision_latency_bucket[5m]))",
+            "legendFormat": "p95"
+          },
+          {
+            "expr": "histogram_quantile(0.99, rate(apos_decision_latency_bucket[5m]))",
+            "legendFormat": "p99"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Anomaly Detection by Type",
+        "type": "piechart",
+        "gridPos": { "h": 8, "w": 8, "x": 0, "y": 16 },
+        "targets": [
+          {
+            "expr": "sum by (anomaly_type) (apos_anomalies_by_type_total)",
+            "legendFormat": "{{anomaly_type}}"
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Connector Performance",
+        "type": "table",
+        "gridPos": { "h": 8, "w": 16, "x": 8, "y": 16 },
+        "targets": [
+          {
+            "expr": "sum by (connector) (apos_connector_success_total) / sum by (connector) (apos_connector_total)",
+            "legendFormat": "{{connector}}"
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "Resource Scaling Events",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 24 },
+        "targets": [
+          {
+            "expr": "apos_current_instances",
+            "legendFormat": "Current Instances"
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "CPU & Memory Usage",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 24 },
+        "targets": [
+          {
+            "expr": "apos_cpu_usage_percent",
+            "legendFormat": "CPU %"
+          },
+          {
+            "expr": "apos_memory_usage_percent",
+            "legendFormat": "Memory %"
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "title": "Healing Actions Timeline",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 32 },
+        "targets": [
+          {
+            "expr": "rate(apos_healing_actions_total[5m])",
+            "legendFormat": "Actions/min"
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "title": "Prediction Accuracy",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 40 },
+        "targets": [
+          {
+            "expr": "apos_prediction_accuracy",
+            "legendFormat": "Model Accuracy"
+          }
+        ]
+      },
+      {
+        "id": 13,
+        "title": "Analytics Processing Time",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 40 },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(apos_analytics_processing_duration_bucket[5m]))",
+            "legendFormat": "p95"
+          }
+        ]
+      }
+    ],
+    "refresh": "10s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    }
+  }
+}
